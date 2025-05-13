@@ -68,4 +68,20 @@ steps:
     docker push mikaregistry2025.azurecr.io/myapp:$(Build.BuildId)
   displayName: "Push image to ACR"
 
+- script: |
+    sed -i "s|image: mikaregistry2025.azurecr.io/myapp:.*|image: mikaregistry2025.azurecr.io/myapp:$(Build.BuildId)|" ./k8s/deployment.yml
+  displayName: "Update image version"
 
+- script: |
+    git config user.name "mika"
+    git config user.email "mika@ci.local"
+    git add ./k8s/deployment.yml
+    git commit -m " Update deployment to image tag $(Build.BuildId)"
+    git push origin master
+  displayName: "Update deployment with new image tag"
+
+- script: |
+    kubectl apply -f ./k8s/deployment.yml
+    kubectl apply -f ./k8s/service.yml
+    kubectl apply -f ./k8s/ingress-resource.yaml
+  displayName: "Deploy to AKS"

@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: flask-ingress
+  namespace: flask-app
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-test"
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+spec:
+  ingressClassName: nginx
+  tls:
+  - hosts:
+    - mikarotemapp.hopto.org
+    secretName: flask-tls2
+  rules:
+  - host: mikarotemapp.hopto.org
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: flask-service  
+            port:
+              number: 80

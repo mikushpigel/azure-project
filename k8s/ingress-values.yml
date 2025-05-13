@@ -1,0 +1,43 @@
+controller:
+  ingressClassResource:
+    name: nginx
+    enabled: true
+    default: false
+  ingressClass: nginx
+  service:
+    enabled: true
+    type: LoadBalancer
+    externalTrafficPolicy: Local
+    ports:
+      https: 443
+    targetPorts:
+      https: 443
+    nodePorts:
+      https: null
+  nodeSelector:
+    kubernetes.io/os: linux
+  admissionWebhooks:
+    enabled: true
+  resources:
+    requests:
+      cpu: 10m
+      memory: 40Mi
+    limits:
+      cpu: 50m
+      memory: 80Mi
+
+defaultBackend:
+  enabled: false
+  nodeSelector:
+    kubernetes.io/os: linux
+
+rbac:
+  create: true
+  scope: false
+
+serviceAccount:
+  create: true
+  name: ""
+  automountServiceAccountToken: true
+
+imagePullSecrets: []

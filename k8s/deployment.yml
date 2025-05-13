@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flask-app
+  namespace: flask-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: flask-app
+  template:
+    metadata:
+      labels:
+        app: flask-app
+        azure.workload.identity/use: "true"
+    spec:
+      serviceAccountName: my-sa
+      containers:
+      - name: flask-app
+        image: mikaregistry2025.azurecr.io/myapp:5
+        ports:
+        - containerPort: 5000

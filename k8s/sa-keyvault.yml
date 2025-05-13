@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: my-sa
+  namespace: flask-app
+  annotations:
+    azure.workload.identity/client-id: "4c075efd-4769-485c-a273-e67ca1fc04ff"
