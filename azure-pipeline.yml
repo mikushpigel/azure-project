@@ -74,7 +74,7 @@ steps:
 
 - script: |
     git config user.name "mika"
-    git config user.email "mika@ci.local"
+    git config user.email "mika@ci"
     git add ./k8s/deployment.yml
     git commit -m " Update deployment to image tag $(Build.BuildId)"
     git push origin master
