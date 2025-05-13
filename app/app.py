@@ -21,7 +21,7 @@ def hello():
 
 @app.route('/sec')
 def sec():
-    return f"Hello from AKS! 🔐 Secret is: {secret}"
+    return f"Secret is: {secret}"
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
