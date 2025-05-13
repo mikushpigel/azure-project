@@ -39,9 +39,9 @@ steps:
     echo "Secret is: $(SuperSecret)"
   displayName: 'Use Retrieved Secret'
 
-- script: |
-     sonar-scanner -Dsonar.login=$(SONAR_TOKEN)
-  displayName: 'run SonarCloud'
+# - script: |
+#      sonar-scanner -Dsonar.login=$(SONAR_TOKEN)
+#   displayName: 'run SonarCloud'
 
 - script: |
     echo "==>Build Docker Image"
