@@ -7,6 +7,7 @@ pool:
 variables:
 - group: my_tokens
 
+steps:
 
 - script: |
     echo "Authenticating with Managed Identity..."
@@ -55,13 +56,13 @@ variables:
     python3 ./app/test.py
   displayName: "test app"
 
-#tag image
+    # tag image
 - script: |
     echo "==> תיוג ל-ACR"
     docker tag myapp mikaregistry2025.azurecr.io/myapp:$(Build.BuildId)
   displayName: "Tag Docker image"
 
-#Push to ACR
+    # Push to ACR
 - script: |
     echo "$(ACR_PASSWORD)" | docker login mikaregistry2025.azurecr.io -u "$(ACR_USERNAME)" --password-stdin
     docker push mikaregistry2025.azurecr.io/myapp:$(Build.BuildId)
