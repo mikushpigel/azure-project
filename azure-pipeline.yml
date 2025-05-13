@@ -76,12 +76,10 @@ steps:
     git config user.name "mika"
     git config user.email "mika@ci"
     git add ./k8s/deployment.yml
-    git commit -m " Update deployment to image tag $(Build.BuildId)"
+    git commit -m " Update deployment to image tag $(Build.BuildId) [skip ci]"
     git push origin master
   displayName: "Update deployment with new image tag"
 
 - script: |
     kubectl apply -f ./k8s/deployment.yml
-    kubectl apply -f ./k8s/service.yml
-    kubectl apply -f ./k8s/ingress-resource.yaml
   displayName: "Deploy to AKS"
