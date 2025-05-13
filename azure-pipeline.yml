@@ -11,7 +11,7 @@ steps:
 
 - script: |
     az login --identity
-  displayName: 'Authenticating with Managed Identity'
+  displayName: 'az login......'
 
 - script: |
     echo "Retrieving secret from Key Vault..."
