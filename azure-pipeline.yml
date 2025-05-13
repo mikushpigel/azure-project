@@ -12,7 +12,7 @@ steps:
 - script: |
     echo "Authenticating with Managed Identity..."
     az login --identity
-  displayName: 'az login...........'
+  displayName: 'az login......'
 
 - script: |
     echo "Retrieving secret from Key Vault..."
