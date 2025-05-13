@@ -59,7 +59,7 @@ steps:
     git config user.email "mika@ci"
     git add ./k8s/deployment.yml
     git commit -m " Update deployment to image tag $(Build.BuildId) [skip ci]"
-    git push origin main
+    git push origin master
   displayName: "Update deployment with new image tag"
 
 - script: |
