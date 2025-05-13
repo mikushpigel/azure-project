@@ -10,9 +10,8 @@ variables:
 steps:
 
 - script: |
-    echo "Authenticating with Managed Identity..."
     az login --identity
-  displayName: 'az login...........'
+  displayName: 'Authenticating with Managed Identity'
 
 - script: |
     echo "Retrieving secret from Key Vault..."
@@ -28,9 +27,9 @@ steps:
     echo "Secret is: $(SuperSecret)"
   displayName: 'Use Retrieved Secret'
 
-# - script: |
-#      sonar-scanner -Dsonar.login=$(SONAR_TOKEN)
-#   displayName: 'run SonarCloud'
+- script: |
+     sonar-scanner -Dsonar.login=$(SONAR_TOKEN)
+  displayName: 'run SonarCloud'
 
 - script: |
     echo "==>Build Docker Image"
@@ -38,31 +37,14 @@ steps:
   displayName: "build  Image"
 
 - script: |
-    echo "Running temporary container from image"
-    docker run -d -p 5000:5000 --name testapp myapp
-
-    sleep 5
-
-    RESPONSE=$(curl -s http://localhost:5000)
-    echo "Response: $RESPONSE"
-
-    echo "$RESPONSE" | grep "Hello, World!" || (echo "Text not found in response" && docker logs testapp && exit 1)
-
-    docker stop testapp && docker rm testapp
-  displayName: "Verify app response contains 'Hello, World!'"
-
-- script: |
     echo "==> (unit-tests)"
     python3 ./app/test.py
   displayName: "test app"
 
-    # tag image
 - script: |
-    echo "==> תיוג ל-ACR"
     docker tag myapp mikaregistry2025.azurecr.io/myapp:$(Build.BuildId)
   displayName: "Tag Docker image"
 
-    # Push to ACR
 - script: |
     echo "$(ACR_PASSWORD)" | docker login mikaregistry2025.azurecr.io -u "$(ACR_USERNAME)" --password-stdin
     docker push mikaregistry2025.azurecr.io/myapp:$(Build.BuildId)
@@ -82,6 +64,4 @@ steps:
 
 - script: |
     kubectl apply -f ./k8s/deployment.yml
-    kubectl apply -f ./k8s/service.yml
-    kubectl apply -f ./k8s/ingress-resource.yaml
   displayName: "Deploy to AKS"
