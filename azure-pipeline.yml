@@ -1,0 +1,82 @@
+trigger:
+- main
+
+pool:
+  name: mika-pool
+
+variables:
+- group: my_tokens
+
+steps:
+- checkout: self
+  displayName: "checkout"
+
+- script: |
+    echo "==> check versions"
+    docker version
+    python3 --version
+    sonar-scanner --version
+    java -version
+    pwd
+  displayName: "check versions"
+
+- script: |
+    echo "Authenticating with Managed Identity..."
+    az login --identity
+  displayName: 'az login...........'
+
+- script: |
+    echo "Retrieving secret from Key Vault..."
+    secret=$(az keyvault secret show \
+      --vault-name "mikaKeyVault1" \
+      --name "SuperSecret" \
+      --query "value" -o tsv)
+
+    echo "##vso[task.setvariable variable=SuperSecret;issecret=true]$secret"
+  displayName: 'Get Secret from Azure Key Vault'
+
+- script: |
+    echo "Secret is: $(SuperSecret)"
+  displayName: 'Use Retrieved Secret'
+
+- script: |
+     sonar-scanner -Dsonar.login=$(SONAR_TOKEN)
+  displayName: 'run SonarCloud'
+
+- script: |
+    echo "==>Build Docker Image"
+    docker build -t myapp ./app
+  displayName: "build  Image"
+
+- script: |
+    echo "Running temporary container from image"
+    docker run -d -p 5000:5000 --name testapp myapp
+
+    sleep 5
+
+    RESPONSE=$(curl -s http://localhost:5000)
+    echo "Response: $RESPONSE"
+
+    echo "$RESPONSE" | grep "Hello, World!" || (echo "Text not found in response" && docker logs testapp && exit 1)
+
+    docker stop testapp && docker rm testapp
+  displayName: "Verify app response contains 'Hello, World!'"
+
+- script: |
+    echo "==> (unit-tests)"
+    python3 ./app/test.py
+  displayName: "test app"
+
+    #  tag image
+- script: |
+    echo "==> תיוג ל-ACR"
+    docker tag myapp mikaregistry2025.azurecr.io/myapp:$(Build.BuildId)
+  displayName: "Tag Docker image"
+
+# 📤 Push to ACR
+- script: |
+    echo "$(ACR_PASSWORD)" | docker login mikaregistry2025.azurecr.io -u "$(ACR_USERNAME)" --password-stdin
+    docker push mikaregistry2025.azurecr.io/myapp:$(Build.BuildId)
+  displayName: "Push image to ACR"
+
+
