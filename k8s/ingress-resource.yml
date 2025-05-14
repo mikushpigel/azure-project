@@ -4,7 +4,7 @@ metadata:
   name: flask-ingress
   namespace: flask-app
   annotations:
-    cert-manager.io/cluster-issuer: "letsencrypt-test"
+    cert-manager.io/cluster-issuer: "letsencrypt-http"
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
 spec:
   ingressClassName: nginx
