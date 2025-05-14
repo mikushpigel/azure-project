@@ -36,10 +36,6 @@ ENV PATH="$JAVA_HOME/bin:$PATH"
 RUN mkdir -p /etc/docker && echo '{"storage-driver": "overlay2"}' > /etc/docker/daemon.json
 VOLUME /var/lib/docker
 
-# Install docker-compose
-RUN curl -L "https://github.com/docker/compose/releases/download/v2.31.0/docker-compose-linux-x86_64" -o /usr/local/bin/docker-compose \
-  && chmod +x /usr/local/bin/docker-compose
-
 # Install sonar-scanner
 RUN curl -sSL https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-5.0.1.3006-linux.zip -o sonar-scanner.zip \
   && unzip sonar-scanner.zip -d /opt/ \
