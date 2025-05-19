@@ -1,0 +1,10 @@
+<<<<<<< HEAD
+=======
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: azure-wi-webhook-config
+  namespace: azure-workload-identity-system
+data:
+  AZURE_CLIENT_ID: ${AZURE_CLIENT_ID}
+>>>>>>> 711fbd2 (update)
