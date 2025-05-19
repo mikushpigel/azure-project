@@ -4,4 +4,4 @@ metadata:
   name: azure-wi-webhook-config
   namespace: azure-workload-identity-system
 data:
-  AZURE_CLIENT_ID: "4c075efd-4769-485c-a273-e67ca1fc04ff"
+  AZURE_CLIENT_ID: ${AZURE_CLIENT_ID}
